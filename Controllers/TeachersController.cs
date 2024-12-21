@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MD4_SQL.Data;
+using MD4_SQL.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MD4_SQL.Controllers
 {
+    [GenderListFilter]
     public class TeachersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -116,6 +119,7 @@ namespace MD4_SQL.Controllers
         }
 
         // GET: Teachers/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

@@ -6,28 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MD4_SQL.Data;
-using MD4_SQL.Filters;
 using Microsoft.AspNetCore.Authorization;
 
 namespace MD4_SQL.Controllers
 {
-    [GenderListFilter]
-    public class StudentsController : Controller
+    public class AssignmentsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public StudentsController(ApplicationDbContext context)
+        public AssignmentsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Students
+        // GET: Assignments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Students.ToListAsync());
+            var applicationDbContext = _context.Assignments.Include(a => a.Course);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Students/Details/5
+        // GET: Assignments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,40 +34,42 @@ namespace MD4_SQL.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students
+            var assignment = await _context.Assignments
+                .Include(a => a.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
+            if (assignment == null)
             {
                 return NotFound();
             }
 
-            return View(student);
+            return View(assignment);
         }
 
-        // GET: Students/Create
+        // GET: Assignments/Create
         public IActionResult Create()
         {
-            //ViewBag.GenderList = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name");
             return View();
         }
 
-        // POST: Students/Create
+        // POST: Assignments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentIdNumber,Id,Name,Surname,Gender")] Student student)
+        public async Task<IActionResult> Create([Bind("Id,Description,Deadline,CourseId")] Assignment assignment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(student);
+                _context.Add(assignment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(student);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", assignment.CourseId);
+            return View(assignment);
         }
 
-        // GET: Students/Edit/5
+        // GET: Assignments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,22 +77,23 @@ namespace MD4_SQL.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
+            var assignment = await _context.Assignments.FindAsync(id);
+            if (assignment == null)
             {
                 return NotFound();
             }
-            return View(student);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", assignment.CourseId);
+            return View(assignment);
         }
 
-        // POST: Students/Edit/5
+        // POST: Assignments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentIdNumber,Id,Name,Surname,Gender")] Student student)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Deadline,CourseId")] Assignment assignment)
         {
-            if (id != student.Id)
+            if (id != assignment.Id)
             {
                 return NotFound();
             }
@@ -100,12 +102,12 @@ namespace MD4_SQL.Controllers
             {
                 try
                 {
-                    _context.Update(student);
+                    _context.Update(assignment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StudentExists(student.Id))
+                    if (!AssignmentExists(assignment.Id))
                     {
                         return NotFound();
                     }
@@ -116,10 +118,11 @@ namespace MD4_SQL.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(student);
+            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Name", assignment.CourseId);
+            return View(assignment);
         }
 
-        // GET: Students/Delete/5
+        // GET: Assignments/Delete/5
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -128,34 +131,35 @@ namespace MD4_SQL.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students
+            var assignment = await _context.Assignments
+                .Include(a => a.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
+            if (assignment == null)
             {
                 return NotFound();
             }
 
-            return View(student);
+            return View(assignment);
         }
 
-        // POST: Students/Delete/5
+        // POST: Assignments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student != null)
+            var assignment = await _context.Assignments.FindAsync(id);
+            if (assignment != null)
             {
-                _context.Students.Remove(student);
+                _context.Assignments.Remove(assignment);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StudentExists(int id)
+        private bool AssignmentExists(int id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            return _context.Assignments.Any(e => e.Id == id);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace MD4_SQL.Data
     public class Person
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public string? Name { get; set; }
