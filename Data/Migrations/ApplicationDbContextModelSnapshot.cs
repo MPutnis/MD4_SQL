@@ -44,7 +44,7 @@ namespace MD4_SQL.Data.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Assignments");
+                    b.ToTable("Assignments", (string)null);
 
                     b.HasData(
                         new
@@ -138,7 +138,7 @@ namespace MD4_SQL.Data.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
 
                     b.HasData(
                         new
@@ -228,7 +228,7 @@ namespace MD4_SQL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
 
                     b.HasData(
                         new
@@ -339,7 +339,7 @@ namespace MD4_SQL.Data.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Submissions");
+                    b.ToTable("Submissions", (string)null);
 
                     b.HasData(
                         new
@@ -448,7 +448,7 @@ namespace MD4_SQL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teachers", (string)null);
 
                     b.HasData(
                         new

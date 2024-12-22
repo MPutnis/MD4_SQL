@@ -4,5 +4,26 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>
+        Google autentifikācijas pievienošanai izmantotie resursi:<br />
+        <a href="https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-9.0"> Microsoft dokumentācija</a>,
+        <a href="https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid">Google sing-in vietne</a>. 
+        <br /> Veidojot "credentials" bija jānorāda ports kuru izmanto aplikācija, 
+        cerams ka tas nemainās starp ierīcēm. 
+        <br /> Tāpat arī sastapos ar šādu kļūdu: Error 400: redirect_uri_mismatch,
+        jo nenorādīju http://localhost:7064/signin-google
+        kā Authorised redirect URIs veidojot credentials. 
+        Šo rakstot to URL ir izdevies pievienot pie Credentials, bet kļūda nav pazudusi.
+        Tajā pašā laikā ir teikts, ka izmaiņu ieviešana var aizņemt vairākas stundas...
+        Neizbrīnītu ja vaina ir kur citur.
+    </p>
+    <p>
+        Sarakstu pievienošanu palīdzēja realizēt Copilot. Course un Assignment kontrolieros detaļu 
+        uzdevumos ir pievienots LINQ 'uzdevums', kurš atlasa saistītos Assignment un Submission un
+        un asinhroni ssaglabā tos sarakstā. <br />
+        Pēc tam šis saraksts kopā ar attiecīgo Course vai Assignment
+        tiek nodots tiem paredzētajiem ViewModels, kurus tālāk izmanto detaļu skata veidošanā.
+        <br />Detaļu skatos ir izveidota tabula, parādās, ja ir saistītie objekti, citādi parāda 
+        paziņojumu, ka nav attiecīgo objektu.
+    </p>
 </div>

@@ -12,14 +12,9 @@ using Microsoft.AspNetCore.Authorization;
 namespace MD4_SQL.Controllers
 {
     [GenderListFilter]
-    public class TeachersController : Controller
+    public class TeachersController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public TeachersController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Teachers
         public async Task<IActionResult> Index()

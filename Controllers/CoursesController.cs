@@ -10,14 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MD4_SQL.Controllers
 {
-    public class CoursesController : Controller
+    public class CoursesController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public CoursesController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Courses
         public async Task<IActionResult> Index()
@@ -42,7 +37,41 @@ namespace MD4_SQL.Controllers
                 return NotFound();
             }
 
-            return View(course);
+            // Get all assignments for a course
+            var assignments = _context.Assignments
+                .Where(a => a.CourseId == id)
+                .ToListAsync();
+            /*
+             This code is querying the Assignments table in the database to retrieve 
+            all assignments that belong to a specific course. Here's a detailed explanation 
+            of each part:
+            _context.Assignments
+                •	_context is an instance of ApplicationDbContext, which is your 
+                    Entity Framework Core database context.
+                •	Assignments is a DbSet<Assignment> property on the ApplicationDbContext class.
+                    It represents the Assignments table in the database.
+            .Where(a => a.CourseId == id)
+                •	.Where is a LINQ method used to filter the data.
+                •	a => a.CourseId == id is a lambda expression that specifies the filter condition. 
+                    It means "select only those assignments where the CourseId property matches the 
+                    given id."
+                •	a is a parameter representing each Assignment object in the Assignments table.
+                •	a.CourseId accesses the CourseId property of the Assignment object.
+                •	id is the parameter passed to the Details action method, representing the 
+                    ID of the course for which you want to retrieve assignments.
+            .ToListAsync()
+                •	.ToListAsync() is an asynchronous method that executes the query and 
+                    returns the results as a List<Assignment>.
+                •	It is part of the Microsoft.EntityFrameworkCore namespace and is 
+                    used to asynchronously convert the result of the query into a list.
+             */
+
+            var viewModel = new CourseDetailsViewModel
+            {
+                Course = course,
+                Assignments = await assignments
+            };
+            return View(viewModel);
         }
 
         // GET: Courses/Create

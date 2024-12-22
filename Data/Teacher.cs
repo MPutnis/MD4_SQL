@@ -5,6 +5,9 @@ namespace MD4_SQL.Data
     public class Teacher : Person
     {
         [Required]
+        // Make it so only the date is shown, Copilot showed how
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ContractDate { get; set; }
 
         // Constructors

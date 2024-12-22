@@ -10,14 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MD4_SQL.Controllers
 {
-    public class AssignmentsController : Controller
+    public class AssignmentsController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public AssignmentsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Assignments
         public async Task<IActionResult> Index()
@@ -41,8 +36,19 @@ namespace MD4_SQL.Controllers
             {
                 return NotFound();
             }
+            // Get all submissions for an assignment
+            var submissions = await _context.Submissions
+                .Where(s => s.AssignmentId == id)
+                .Include(s => s.Student)
+                .ToListAsync();
 
-            return View(assignment);
+            var viewModel = new AssignmentDetailsViewModel
+            {
+                Assignment = assignment,
+                Submissions = submissions
+            };
+
+            return View(viewModel);
         }
 
         // GET: Assignments/Create

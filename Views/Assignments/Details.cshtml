@@ -1,4 +1,4 @@
-﻿@model MD4_SQL.Data.Assignment
+﻿@model MD4_SQL.Data.AssignmentDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,26 +11,73 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Assignment.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Assignment.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Deadline)
+            @Html.DisplayNameFor(model => model.Assignment.Deadline)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Deadline)
+            @Html.DisplayFor(model => model.Assignment.Deadline)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
+            @Html.DisplayNameFor(model => model.Assignment.Course)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Course.Name)
+            @Html.DisplayFor(model => model.Assignment.Course.Name)
         </dd>
     </dl>
 </div>
+
+@if (Model.Submissions != null && Model.Submissions.Any())
+{
+    <h4>Submissions</h4>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Submissions.First().SubmissionTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Submissions.First().Score)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Submissions.First().Student)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Submissions)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubmissionTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Score)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Student.FullName)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-controller="Submissions" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Edit" asp-controller="Submissions" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Delete" asp-controller="Submissions" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No submissions found.</p>
+}
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Assignment.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
